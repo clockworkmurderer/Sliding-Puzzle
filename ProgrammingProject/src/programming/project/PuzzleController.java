@@ -19,7 +19,9 @@ public class PuzzleController extends GraphicsProgram {
 	Color inactivePieceColor = new Color(0, 51, 153);
 	Color activePieceColor = new Color(51, 153, 102);
 
-	static GCompound topLeft, topRight, bottomLeft, bottomRight, middleSquare;
+	GCompound topLeft, topRight, bottomLeft, bottomRight, middleSquare;
+	
+	boolean moving = false;
 
 	String name = new String();
 	private GPoint lastClick;
@@ -91,19 +93,31 @@ public class PuzzleController extends GraphicsProgram {
 	}
 
 	public void keyTyped(KeyEvent e) {
-		if (activePiece != null) {
+		if (activePiece != null && !moving) {
 			switch (Character.toUpperCase(e.getKeyChar())) {
 			case 'W':
+				moving = true;
+				pause(10);
 				movement(0, -1);
+				moving = false;
 				break;
 			case 'S':
+				moving = true;
+				pause(10);
 				movement(0, 1);
+				moving = false;
 				break;
 			case 'A':
+				moving = true;
+				pause(10);
 				movement(-1, 0);
+				moving = false;
 				break;
 			case 'D':
+				moving = true;
+				pause(10);
 				movement(1, 0);
+				moving = false;
 				break;
 			default:
 				break;
@@ -117,6 +131,7 @@ public class PuzzleController extends GraphicsProgram {
 			destination[i] = new GPoint(activePiece.getCoordinates()[i].getX() + x,
 					activePiece.getCoordinates()[i].getY() + y);
 		}
+		
 		if (board.checkIntersection(new GamePiece(destination, activePiece.getName()))) {
 			return;
 		} else {
