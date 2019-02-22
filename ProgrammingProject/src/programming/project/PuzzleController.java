@@ -9,6 +9,10 @@ import acm.graphics.GPoint;
 import acm.graphics.GRect;
 import acm.program.GraphicsProgram;
 
+/**
+ * This class controls the sliding puzzle. Its internal View class handles the
+ * graphics.
+ */
 public class PuzzleController extends GraphicsProgram {
 
 	private static final int CELL_SIZE = 80;
@@ -20,7 +24,7 @@ public class PuzzleController extends GraphicsProgram {
 	Color activePieceColor = new Color(51, 153, 102);
 
 	GCompound topLeft, topRight, bottomLeft, bottomRight, middleSquare;
-	
+
 	String name = new String();
 	private GPoint lastClick;
 	private GamePiece activePiece;
@@ -33,10 +37,12 @@ public class PuzzleController extends GraphicsProgram {
 		addKeyListeners();
 	}
 
+	@Override
 	public void run() {
 		repaintBoard();
 	}
 
+	/** This method repaints the board. */
 	public void repaintBoard() {
 		removeAll();
 		view.gridSetup();
@@ -47,12 +53,19 @@ public class PuzzleController extends GraphicsProgram {
 		view.draw(board.middleSquare, inactivePieceColor);
 	}
 
+	@Override
 	public void mousePressed(MouseEvent e) {
 		activePiece = null;
 		repaintBoard();
 		lastClick = new GPoint(e.getPoint());
+		
+		/**
+		 * The next line reduces the clicked location to a fraction of the CELL_SIZE in
+		 * order to conform to the coordinate system.
+		 */
 		lastClick.setLocation((int) lastClick.getX() / CELL_SIZE, (int) lastClick.getY() / CELL_SIZE);
 
+		/** Checks against the HashMap to see if the clicked cell is occupied by a piece. */
 		for (Map.Entry<String, GPoint[]> entry : board.getPiecePositions().entrySet()) {
 			GPoint[] temp = entry.getValue();
 			for (int i = 0; i < temp.length; i++) {
@@ -117,8 +130,8 @@ public class PuzzleController extends GraphicsProgram {
 			destination[i] = new GPoint(activePiece.getCoordinates()[i].getX() + x,
 					activePiece.getCoordinates()[i].getY() + y);
 		}
-		
-		if (board.isMoveValid(new GamePiece(destination, activePiece.getName()))) {
+
+		if (!board.isMoveValid(new GamePiece(destination, activePiece.getName()))) {
 			return;
 		} else {
 			activePiece.movePiece(x, y);
@@ -132,20 +145,15 @@ public class PuzzleController extends GraphicsProgram {
 		public void draw(GamePiece piece, Color c) {
 
 			if (piece.equals(board.topLeft)) {
-				add(drawTopLeft(c), piece.getCurrentPosition().getX() * CELL_SIZE,
-						piece.getCurrentPosition().getY() * CELL_SIZE);
+				add(drawTopLeft(c), piece.getOrigin().getX() * CELL_SIZE, piece.getOrigin().getY() * CELL_SIZE);
 			} else if (piece.equals(board.topRight)) {
-				add(drawTopRight(c), piece.getCurrentPosition().getX() * CELL_SIZE,
-						piece.getCurrentPosition().getY() * CELL_SIZE);
+				add(drawTopRight(c), piece.getOrigin().getX() * CELL_SIZE, piece.getOrigin().getY() * CELL_SIZE);
 			} else if (piece.equals(board.bottomLeft)) {
-				add(drawBottomLeft(c), piece.getCurrentPosition().getX() * CELL_SIZE,
-						piece.getCurrentPosition().getY() * CELL_SIZE);
+				add(drawBottomLeft(c), piece.getOrigin().getX() * CELL_SIZE, piece.getOrigin().getY() * CELL_SIZE);
 			} else if (piece.equals(board.bottomRight)) {
-				add(drawBottomRight(c), piece.getCurrentPosition().getX() * CELL_SIZE,
-						piece.getCurrentPosition().getY() * CELL_SIZE);
+				add(drawBottomRight(c), piece.getOrigin().getX() * CELL_SIZE, piece.getOrigin().getY() * CELL_SIZE);
 			} else if (piece.equals(board.middleSquare)) {
-				add(drawMiddleSquare(c), piece.getCurrentPosition().getX() * CELL_SIZE,
-						piece.getCurrentPosition().getY() * CELL_SIZE);
+				add(drawMiddleSquare(c), piece.getOrigin().getX() * CELL_SIZE, piece.getOrigin().getY() * CELL_SIZE);
 			} else {
 			}
 		}
