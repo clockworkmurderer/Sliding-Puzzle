@@ -8,40 +8,45 @@ public class GamePiece {
 	private GPoint[] coordinates;
 
 	public GamePiece(GPoint a, GPoint b, GPoint c, String name) {
-		coordinates = new GPoint[3];
-		coordinates[0] = a;
-		coordinates[1] = b;
-		coordinates[2] = c;
+		this.coordinates = new GPoint[3];
+		this.coordinates[0] = a;
+		this.coordinates[1] = b;
+		this.coordinates[2] = c;
 		this.name = name;
 	}
 
 	public GamePiece(GPoint a, GPoint b, GPoint c, GPoint d, String name) {
-		coordinates = new GPoint[4];
-		coordinates[0] = a;
-		coordinates[1] = b;
-		coordinates[2] = c;
-		coordinates[3] = d;
+		this.coordinates = new GPoint[4];
+		this.coordinates[0] = a;
+		this.coordinates[1] = b;
+		this.coordinates[2] = c;
+		this.coordinates[3] = d;
+		this.name = name;
+	}
+
+	public GamePiece(GPoint[] coords, String name) {
+		this.coordinates = coords;
 		this.name = name;
 	}
 
 	public String getName() {
-		return name;
+		return this.name;
 	}
 
 	public GPoint[] getCoordinates() {
-		return coordinates;
+		return this.coordinates;
 	}
 
 	public void setCoordinates(GPoint[] pieceCoordinates) {
-		coordinates = pieceCoordinates;
+		this.coordinates = pieceCoordinates;
 	}
 
 	public GPoint getCurrentPosition() {
-		return currentPosition;
+		return this.currentPosition;
 	}
 
 	public void setCurrentPosition(GPoint shapeOrigin) {
-		currentPosition = shapeOrigin;
+		this.currentPosition = shapeOrigin;
 	}
 
 	public void movePiece(int x, int y) {

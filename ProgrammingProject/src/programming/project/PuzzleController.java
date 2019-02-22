@@ -18,8 +18,8 @@ public class PuzzleController extends GraphicsProgram {
 	private PuzzleView view = new PuzzleView();
 	Color inactivePieceColor = new Color(0, 51, 153);
 	Color activePieceColor = new Color(51, 153, 102);
-	
-	GCompound topLeft, topRight, bottomLeft, bottomRight, middleSquare;
+
+	static GCompound topLeft, topRight, bottomLeft, bottomRight, middleSquare;
 
 	String name = new String();
 	private GPoint lastClick;
@@ -51,8 +51,8 @@ public class PuzzleController extends GraphicsProgram {
 		activePiece = null;
 		repaintBoard();
 		lastClick = new GPoint(e.getPoint());
-		lastClick.setLocation((int)lastClick.getX() / CELL_SIZE, (int)lastClick.getY() / CELL_SIZE);
-		
+		lastClick.setLocation((int) lastClick.getX() / CELL_SIZE, (int) lastClick.getY() / CELL_SIZE);
+
 		for (Map.Entry<String, GPoint[]> entry : board.getPiecePositions().entrySet()) {
 			GPoint[] temp = entry.getValue();
 			for (int i = 0; i < temp.length; i++) {
@@ -61,7 +61,7 @@ public class PuzzleController extends GraphicsProgram {
 				}
 			}
 		}
-		
+
 		if (name != null) {
 			switch (name) {
 			case "topLeft":
@@ -113,16 +113,14 @@ public class PuzzleController extends GraphicsProgram {
 
 	private void movement(int x, int y) {
 		GPoint[] oldCoordinates = activePiece.getCoordinates();
-		GPoint oldPosition = activePiece.getCurrentPosition();
-		activePiece.movePiece(x, y);
-		board.setPiecePositions(activePiece.getName(), activePiece.getCoordinates());
-		if(board.checkIntersection(activePiece)) {
-			activePiece.setCoordinates(oldCoordinates);
-			activePiece.setCurrentPosition(oldPosition);
+		if (board.checkIntersection(new GamePiece(oldCoordinates, activePiece.getName()))) {
+			return;
+		} else {
+			activePiece.movePiece(x, y);
 			board.setPiecePositions(activePiece.getName(), activePiece.getCoordinates());
+			repaintBoard();
+			view.draw(activePiece, activePieceColor);
 		}
-		repaintBoard();
-		view.draw(activePiece, activePieceColor);
 	}
 
 	class PuzzleView {

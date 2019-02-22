@@ -6,7 +6,7 @@ import acm.graphics.GPoint;
 
 public class PuzzleModel {
 	private static GPoint[][] boardGrid;
-	private Map<String, GPoint[]> piecePositions = new HashMap<String, GPoint[]>();
+	private static Map<String, GPoint[]> piecePositions = new HashMap<String, GPoint[]>();
 	GamePiece topLeft, topRight, bottomLeft, bottomRight, middleSquare;
 
 	public PuzzleModel() {
@@ -46,15 +46,21 @@ public class PuzzleModel {
 
 	public void setPiecePositions(String name, GPoint[] newPosition) {
 		piecePositions.put(name, newPosition);
+//		for (Map.Entry<String, GPoint[]> entry : this.getPiecePositions().entrySet()) {
+//			for (int i = 0; i < entry.getValue().length; i++) {
+//				System.out.println(" " + entry.getKey() + " " + entry.getValue()[i]);
+//			}
+//		}
 	}
-	
+
 	public boolean checkIntersection(GamePiece activePiece) {
 		GPoint[] activePieceCoordinates = activePiece.getCoordinates();
 		for (Map.Entry<String, GPoint[]> entry : this.getPiecePositions().entrySet()) {
 			GPoint[] temp = entry.getValue();
 			for (int i = 0; i < temp.length; i++) {
+//				System.out.println(entry.getKey() + " " + temp[i]);
 				for (int j = 0; j < activePieceCoordinates.length; j++) {
-					if (entry.getKey() != activePiece.getName() && temp[i].equals(activePieceCoordinates[j])) {
+					if (!entry.getKey().equals(activePiece.getName()) && temp[i].equals(activePieceCoordinates[j])) {
 						return true;
 					}
 				}
