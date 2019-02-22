@@ -21,8 +21,6 @@ public class PuzzleController extends GraphicsProgram {
 
 	GCompound topLeft, topRight, bottomLeft, bottomRight, middleSquare;
 	
-	boolean moving = false;
-
 	String name = new String();
 	private GPoint lastClick;
 	private GamePiece activePiece;
@@ -93,31 +91,19 @@ public class PuzzleController extends GraphicsProgram {
 	}
 
 	public void keyTyped(KeyEvent e) {
-		if (activePiece != null && !moving) {
+		if (activePiece != null) {
 			switch (Character.toUpperCase(e.getKeyChar())) {
 			case 'W':
-				moving = true;
-				pause(10);
 				movement(0, -1);
-				moving = false;
 				break;
 			case 'S':
-				moving = true;
-				pause(10);
 				movement(0, 1);
-				moving = false;
 				break;
 			case 'A':
-				moving = true;
-				pause(10);
 				movement(-1, 0);
-				moving = false;
 				break;
 			case 'D':
-				moving = true;
-				pause(10);
 				movement(1, 0);
-				moving = false;
 				break;
 			default:
 				break;
@@ -126,7 +112,7 @@ public class PuzzleController extends GraphicsProgram {
 	}
 
 	private void movement(int x, int y) {
-		GPoint[] destination = activePiece.getCoordinates();
+		GPoint[] destination = new GPoint[activePiece.getCoordinates().length];
 		for (int i = 0; i < destination.length; i++) {
 			destination[i] = new GPoint(activePiece.getCoordinates()[i].getX() + x,
 					activePiece.getCoordinates()[i].getY() + y);
