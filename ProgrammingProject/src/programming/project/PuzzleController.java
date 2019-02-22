@@ -93,57 +93,34 @@ public class PuzzleController extends GraphicsProgram {
 		if (activePiece != null) {
 			switch (Character.toUpperCase(e.getKeyChar())) {
 			case 'W':
-				GamePiece tempPiece = activePiece;
-				removeAll();
-				activePiece.movePiece(0, -1);
-				board.setPiecePositions(activePiece.getName(), activePiece.getCoordinates());
-				if(board.checkIntersection(activePiece)) {
-					activePiece = tempPiece;
-					board.setPiecePositions(activePiece.getName(), activePiece.getCoordinates());
-				}
-				repaintBoard();
-				view.draw(activePiece, activePieceColor);
+				movement(0, -1);
 				break;
 			case 'S':
-				tempPiece = activePiece;
-				removeAll();
-				activePiece.movePiece(0, 1);
-				board.setPiecePositions(activePiece.getName(), activePiece.getCoordinates());
-				if(board.checkIntersection(activePiece)) {
-					activePiece = tempPiece;
-					board.setPiecePositions(activePiece.getName(), activePiece.getCoordinates());
-				}
-				repaintBoard();
-				view.draw(activePiece, activePieceColor);
+				movement(0, 1);
 				break;
 			case 'A':
-				tempPiece = activePiece;
-				removeAll();
-				activePiece.movePiece(-1, 0);
-				board.setPiecePositions(activePiece.getName(), activePiece.getCoordinates());
-				if(board.checkIntersection(activePiece)) {
-					activePiece = tempPiece;
-					board.setPiecePositions(activePiece.getName(), activePiece.getCoordinates());
-				}
-				repaintBoard();
-				view.draw(activePiece, activePieceColor);
+				movement(-1, 0);
 				break;
 			case 'D':
-				tempPiece = activePiece;
-				removeAll();
-				activePiece.movePiece(1, 0);
-				board.setPiecePositions(activePiece.getName(), activePiece.getCoordinates());
-				if(board.checkIntersection(activePiece)) {
-					activePiece = tempPiece;
-					board.setPiecePositions(activePiece.getName(), activePiece.getCoordinates());
-				}
-				repaintBoard();
-				view.draw(activePiece, activePieceColor);
+				movement(1, 0);
 				break;
 			default:
 				break;
 			}
 		}
+	}
+
+	private void movement(int x, int y) {
+		GamePiece tempPiece = activePiece;
+		removeAll();
+		activePiece.movePiece(x, y);
+		board.setPiecePositions(activePiece.getName(), activePiece.getCoordinates());
+		if(board.checkIntersection(activePiece)) {
+			activePiece = tempPiece;
+			board.setPiecePositions(activePiece.getName(), activePiece.getCoordinates());
+		}
+		repaintBoard();
+		view.draw(activePiece, activePieceColor);
 	}
 
 	class PuzzleView {

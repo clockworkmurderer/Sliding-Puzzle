@@ -54,7 +54,7 @@ public class PuzzleModel {
 			GPoint[] temp = entry.getValue();
 			for (int i = 0; i < temp.length; i++) {
 				for (int j = 0; j < activePieceCoordinates.length; j++) {
-					if (temp[i].equals(activePieceCoordinates[j]) && entry.getKey() != activePiece.getName()) {
+					if (entry.getKey() != activePiece.getName() && temp[i].equals(activePieceCoordinates[j])) {
 						return true;
 					}
 				}
