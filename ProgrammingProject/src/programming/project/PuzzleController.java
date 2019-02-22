@@ -38,6 +38,7 @@ public class PuzzleController extends GraphicsProgram {
 	}
 
 	public void repaintBoard() {
+		removeAll();
 		view.gridSetup();
 		view.draw(board.topLeft, inactivePieceColor);
 		view.draw(board.topRight, inactivePieceColor);
@@ -111,12 +112,13 @@ public class PuzzleController extends GraphicsProgram {
 	}
 
 	private void movement(int x, int y) {
-		GamePiece tempPiece = activePiece;
-		removeAll();
+		GPoint[] oldCoordinates = activePiece.getCoordinates();
+		GPoint oldPosition = activePiece.getCurrentPosition();
 		activePiece.movePiece(x, y);
 		board.setPiecePositions(activePiece.getName(), activePiece.getCoordinates());
 		if(board.checkIntersection(activePiece)) {
-			activePiece = tempPiece;
+			activePiece.setCoordinates(oldCoordinates);
+			activePiece.setCurrentPosition(oldPosition);
 			board.setPiecePositions(activePiece.getName(), activePiece.getCoordinates());
 		}
 		repaintBoard();
