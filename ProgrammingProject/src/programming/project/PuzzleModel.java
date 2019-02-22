@@ -47,4 +47,19 @@ public class PuzzleModel {
 	public void setPiecePositions(String name, GPoint[] newPosition) {
 		piecePositions.put(name, newPosition);
 	}
+	
+	public boolean checkIntersection(GamePiece activePiece) {
+		GPoint[] activePieceCoordinates = activePiece.getCoordinates();
+		for (Map.Entry<String, GPoint[]> entry : this.getPiecePositions().entrySet()) {
+			GPoint[] temp = entry.getValue();
+			for (int i = 0; i < temp.length; i++) {
+				for (int j = 0; j < activePieceCoordinates.length; j++) {
+					if (temp[i].equals(activePieceCoordinates[j]) && entry.getKey() != activePiece.getName()) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
 }
