@@ -23,7 +23,7 @@ public class PuzzleController extends GraphicsProgram {
 
 	String name = new String();
 	private GPoint lastClick;
-	GamePiece activePiece;
+	private GamePiece activePiece;
 
 	@Override
 	public void init() {
@@ -112,8 +112,12 @@ public class PuzzleController extends GraphicsProgram {
 	}
 
 	private void movement(int x, int y) {
-		GPoint[] oldCoordinates = activePiece.getCoordinates();
-		if (board.checkIntersection(new GamePiece(oldCoordinates, activePiece.getName()))) {
+		GPoint[] destination = activePiece.getCoordinates();
+		for (int i = 0; i < destination.length; i++) {
+			destination[i] = new GPoint(activePiece.getCoordinates()[i].getX() + x,
+					activePiece.getCoordinates()[i].getY() + y);
+		}
+		if (board.checkIntersection(new GamePiece(destination, activePiece.getName()))) {
 			return;
 		} else {
 			activePiece.movePiece(x, y);
