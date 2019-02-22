@@ -5,7 +5,7 @@ import java.util.Map;
 import acm.graphics.GPoint;
 
 public class PuzzleModel {
-	private static Map<String, GPoint[]> piecePositions  = new HashMap<String, GPoint[]>();
+	private static Map<String, GPoint[]> piecePositions = new HashMap<String, GPoint[]>();
 	GamePiece topLeft, topRight, bottomLeft, bottomRight, middleSquare;
 
 	public PuzzleModel() {
@@ -41,13 +41,16 @@ public class PuzzleModel {
 		piecePositions.put(name, newPosition);
 	}
 
-	public boolean checkIntersection(GamePiece activePiece) {
+	public boolean isMoveValid(GamePiece activePiece) {
 		GPoint[] activePieceCoordinates = activePiece.getCoordinates();
 		for (Map.Entry<String, GPoint[]> entry : this.getPiecePositions().entrySet()) {
 			GPoint[] temp = entry.getValue();
 			for (int i = 0; i < temp.length; i++) {
 				for (int j = 0; j < activePieceCoordinates.length; j++) {
-					if (!entry.getKey().equals(activePiece.getName()) && temp[i].equals(activePieceCoordinates[j])) {
+					if (!entry.getKey().equals(activePiece.getName()) && temp[i].equals(activePieceCoordinates[j])
+							|| ((int) activePieceCoordinates[j].getX()) < 0 || ((int) activePieceCoordinates[j].getX()) > 3
+							|| ((int) activePieceCoordinates[j].getY()) < 0
+							|| ((int) activePieceCoordinates[j].getY()) > 5) {
 						return true;
 					}
 				}

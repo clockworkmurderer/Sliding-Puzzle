@@ -118,7 +118,7 @@ public class PuzzleController extends GraphicsProgram {
 					activePiece.getCoordinates()[i].getY() + y);
 		}
 		
-		if (board.checkIntersection(new GamePiece(destination, activePiece.getName()))) {
+		if (board.isMoveValid(new GamePiece(destination, activePiece.getName()))) {
 			return;
 		} else {
 			activePiece.movePiece(x, y);
