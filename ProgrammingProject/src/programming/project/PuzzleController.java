@@ -24,14 +24,16 @@ public class PuzzleController extends GraphicsProgram {
 
 	private PuzzleModel board = new PuzzleModel();
 	private PuzzleView view = new PuzzleView();
-	Color inactivePieceColor = new Color(0, 51, 153);
-	Color activePieceColor = new Color(51, 153, 102);
+	private Color inactivePieceColor = new Color(0, 51, 153);
+	private Color activePieceColor = new Color(51, 153, 102);
 
-	GCompound topLeft, topRight, bottomLeft, bottomRight, middleSquare;
+	private GCompound topLeft, topRight, bottomLeft, bottomRight, middleSquare;
 
-	String name = new String();
+	private String name = new String();
 	private GPoint lastClick;
 	private GamePiece activePiece;
+
+	private boolean playing = false;
 
 	@Override
 	public void init() {
@@ -42,6 +44,56 @@ public class PuzzleController extends GraphicsProgram {
 
 	@Override
 	public void run() {
+		introduction();
+	}
+
+	/** Introduce the player to the game. */
+	public void introduction() {
+		setSize(300, 100);
+		GLabel welcome = new GLabel("Welcome to the Schimmler sliding puzzle!");
+		GLabel welcome2 = new GLabel("Click the screen to advance the instructions.");
+		add(welcome, 25, 25);
+		add(welcome2, 24, 40);
+		waitForClick();
+		removeAll();
+
+		GLabel directions1 = new GLabel("To play, click the piece you would like to");
+		GLabel directions2 = new GLabel("move and move it with the WASD keys.");
+		welcome = new GLabel("Press N at any time to reset the puzzle.");
+		add(directions1, 25, 25);
+		add(directions2, 25, 40);
+		add(welcome, 25, 55);
+		waitForClick();
+		removeAll();
+
+		welcome = new GLabel("A piece can only be moved into adjacent");
+		directions1 = new GLabel("empty cells at 90 degree angles. In order to win,");
+		directions2 = new GLabel("you will need to move the pieces until they match");
+		welcome2 = new GLabel("the following configuration.");
+		add(welcome, 40, 25);
+		add(directions1, 20, 40);
+		add(directions2, 20, 55);
+		add(welcome2, 65, 70);
+		waitForClick();
+		removeAll();
+
+		view.showSolution();
+		waitForClick();
+		removeAll();
+
+		setSize(300, 100);
+		welcome = new GLabel("Good luck!");
+		welcome2 = new GLabel("Click to begin the game.");
+		add(welcome, 110, 50);
+		add(welcome2, 75, 75);
+		waitForClick();
+		removeAll();
+		playing = true;
+		gameStart();
+	}
+
+	/** Start the game. */
+	public void gameStart() {
 		repaintBoard();
 	}
 
@@ -59,78 +111,87 @@ public class PuzzleController extends GraphicsProgram {
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		activePiece = null;
-		repaintBoard();
-		lastClick = new GPoint(e.getPoint());
+		if (playing) {
+			activePiece = null;
+			repaintBoard();
+			lastClick = new GPoint(e.getPoint());
 
-		/**
-		 * The next line reduces the clicked location to a fraction of the CELL_SIZE in
-		 * order to conform to the coordinate system.
-		 */
-		lastClick.setLocation((int) lastClick.getX() / CELL_SIZE, (int) lastClick.getY() / CELL_SIZE);
+			/**
+			 * The next line reduces the clicked location to a fraction of the CELL_SIZE in
+			 * order to conform to the coordinate system.
+			 */
+			lastClick.setLocation((int) lastClick.getX() / CELL_SIZE, (int) lastClick.getY() / CELL_SIZE);
 
-		/**
-		 * Checks against the HashMap to see if the clicked cell is occupied by a piece.
-		 */
-		for (Map.Entry<String, GPoint[]> entry : board.getPiecePositions().entrySet()) {
-			GPoint[] temp = entry.getValue();
-			for (int i = 0; i < temp.length; i++) {
-				if (temp[i].equals(lastClick)) {
-					name = entry.getKey();
+			/**
+			 * Checks against the HashMap to see if the clicked cell is occupied by a piece.
+			 */
+			for (Map.Entry<String, GPoint[]> entry : board.getPiecePositions().entrySet()) {
+				GPoint[] temp = entry.getValue();
+				for (int i = 0; i < temp.length; i++) {
+					if (temp[i].equals(lastClick)) {
+						name = entry.getKey();
+					}
 				}
 			}
-		}
 
-		/**
-		 * Uses the key from the HashMap to figure out which, if any, piece was clicked
-		 * and then sets the active piece to the piece which was clicked.
-		 */
-		if (name != null) {
-			switch (name) {
-			case "topLeft":
-				activePiece = board.topLeft;
-				view.draw(activePiece, activePieceColor);
-				break;
-			case "topRight":
-				activePiece = board.topRight;
-				view.draw(activePiece, activePieceColor);
-				break;
-			case "bottomLeft":
-				activePiece = board.bottomLeft;
-				view.draw(activePiece, activePieceColor);
-				break;
-			case "bottomRight":
-				activePiece = board.bottomRight;
-				view.draw(activePiece, activePieceColor);
-				break;
-			case "middleSquare":
-				activePiece = board.middleSquare;
-				view.draw(activePiece, activePieceColor);
-				break;
-			default:
-				break;
+			/**
+			 * Uses the key from the HashMap to figure out which, if any, piece was clicked
+			 * and then sets the active piece to the piece which was clicked.
+			 */
+			if (name != null) {
+				switch (name) {
+				case "topLeft":
+					activePiece = board.topLeft;
+					view.draw(activePiece, activePieceColor);
+					break;
+				case "topRight":
+					activePiece = board.topRight;
+					view.draw(activePiece, activePieceColor);
+					break;
+				case "bottomLeft":
+					activePiece = board.bottomLeft;
+					view.draw(activePiece, activePieceColor);
+					break;
+				case "bottomRight":
+					activePiece = board.bottomRight;
+					view.draw(activePiece, activePieceColor);
+					break;
+				case "middleSquare":
+					activePiece = board.middleSquare;
+					view.draw(activePiece, activePieceColor);
+					break;
+				default:
+					break;
+				}
 			}
+		} else {
+			return;
 		}
 	}
 
 	@Override
 	public void keyTyped(KeyEvent e) {
-		if (activePiece != null) {
-			switch (Character.toUpperCase(e.getKeyChar())) {
-			case 'W':
-				movement(0, -1);
-				break;
-			case 'S':
-				movement(0, 1);
-				break;
-			case 'A':
-				movement(-1, 0);
-				break;
-			case 'D':
-				movement(1, 0);
-				break;
-			default:
-				break;
+		if (playing) {
+			if (activePiece != null) {
+				switch (Character.toUpperCase(e.getKeyChar())) {
+				case 'W':
+					movement(0, -1);
+					break;
+				case 'S':
+					movement(0, 1);
+					break;
+				case 'A':
+					movement(-1, 0);
+					break;
+				case 'D':
+					movement(1, 0);
+					break;
+				case 'N':
+					reset();
+					break;
+				default:
+					break;
+				}
 			}
 		}
 	}
@@ -157,6 +218,27 @@ public class PuzzleController extends GraphicsProgram {
 			repaintBoard();
 			view.draw(activePiece, activePieceColor);
 		}
+		if (board.winCondition()) {
+			victory();
+		}
+	}
+
+	/** Resets the puzzle. */
+	public void reset() {
+		board = new PuzzleModel();
+		moveCounter = 0;
+		repaintBoard();
+	}
+
+	/** Displays the victory message upon completing the puzzle. */
+	public void victory() {
+		pause(8000);
+		removeAll();
+		setSize(300, 100);
+		GLabel victory = new GLabel("You completed the puzzle in only " + moveCounter + " moves!");
+		add(victory, 100, 75);
+		// System.out.println("You completed the puzzle in only " + moveCounter + "
+		// moves!");
 	}
 
 	/**
@@ -196,6 +278,16 @@ public class PuzzleController extends GraphicsProgram {
 			setSize(CELL_SIZE * 4 + 10, CELL_SIZE * 7 + 10);
 			numberOfMoves = new GLabel("Number of Moves: " + moveCounter, CELL_SIZE, CELL_SIZE * 6 + 25);
 			add(numberOfMoves);
+		}
+
+		private void showSolution() {
+			removeAll();
+			gridSetup();
+			add(drawTopLeft(inactivePieceColor), 0, 0);
+			add(drawTopRight(inactivePieceColor), 2 * CELL_SIZE, 0);
+			add(drawBottomLeft(inactivePieceColor), 0, 2 * CELL_SIZE);
+			add(drawBottomRight(inactivePieceColor), 2 * CELL_SIZE, 2 * CELL_SIZE);
+			add(drawMiddleSquare(inactivePieceColor), 1 * CELL_SIZE, 4 * CELL_SIZE);
 		}
 
 		/** Draws the top left piece. */
@@ -255,19 +347,19 @@ public class PuzzleController extends GraphicsProgram {
 		/** Draws the bottom right piece. */
 		private GCompound drawBottomRight(Color c) {
 
-			bottomLeft = new GCompound();
+			bottomRight = new GCompound();
 
 			GRect bottomPiece = new GRect(GAP, CELL_SIZE + GAP, CELL_SIZE * 2 - GAP * 2, CELL_SIZE - GAP * 2);
 			bottomPiece.setColor(c);
 			bottomPiece.setFilled(true);
-			bottomLeft.add(bottomPiece);
+			bottomRight.add(bottomPiece);
 
 			GRect sidePiece = new GRect(CELL_SIZE + GAP, GAP, CELL_SIZE - GAP * 2, CELL_SIZE * 2 - GAP * 2);
 			sidePiece.setFilled(true);
 			sidePiece.setColor(c);
-			bottomLeft.add(sidePiece);
+			bottomRight.add(sidePiece);
 
-			return bottomLeft;
+			return bottomRight;
 		}
 
 		/** Draws the middle piece. */
