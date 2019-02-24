@@ -217,9 +217,11 @@ public class PuzzleController extends GraphicsProgram {
 			board.setPiecePositions(activePiece.getName(), activePiece.getCoordinates());
 			repaintBoard();
 			view.draw(activePiece, activePieceColor);
-		}
-		if (board.winCondition()) {
-			victory();
+			repaintBoard();
+			if (board.winCondition()) {
+				pause(3000);
+				victory();
+			}
 		}
 	}
 
@@ -232,13 +234,10 @@ public class PuzzleController extends GraphicsProgram {
 
 	/** Displays the victory message upon completing the puzzle. */
 	public void victory() {
-		pause(8000);
 		removeAll();
 		setSize(300, 100);
 		GLabel victory = new GLabel("You completed the puzzle in only " + moveCounter + " moves!");
-		add(victory, 100, 75);
-		// System.out.println("You completed the puzzle in only " + moveCounter + "
-		// moves!");
+		add(victory, 25, 75);
 	}
 
 	/**
@@ -280,6 +279,7 @@ public class PuzzleController extends GraphicsProgram {
 			add(numberOfMoves);
 		}
 
+		/** Used during the instructions to show the user what the objective is. */
 		private void showSolution() {
 			removeAll();
 			gridSetup();

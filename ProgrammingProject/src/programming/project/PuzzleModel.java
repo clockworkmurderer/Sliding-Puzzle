@@ -15,7 +15,6 @@ public class PuzzleModel {
 	 * positions required to win the game.
 	 */
 	private static Map<String, GPoint[]> piecePositions = new HashMap<String, GPoint[]>();
-//	private static Map<String, GPoint[]> victoryPositions = new HashMap<String, GPoint[]>();
 
 	/** The pieces. */
 	GamePiece topLeft, topRight, bottomLeft, bottomRight, middleSquare;
@@ -47,8 +46,6 @@ public class PuzzleModel {
 		middleSquare.setOrigin(new GPoint(1, 1));
 		piecePositions.put(middleSquare.getName(), middleSquare.getCoordinates());
 
-		// setVictoryPositions();
-
 	}
 
 	/** This method checks the win condition of the puzzle. */
@@ -58,35 +55,35 @@ public class PuzzleModel {
 		GPoint[] pieceCoords;
 
 		pieceCoords = new GPoint[] { new GPoint(0, 0), new GPoint(0, 1), new GPoint(1, 0) };
-		if (Arrays.deepEquals(getPiecePositions().get("topLeft"), pieceCoords)) {
+		if (Arrays.equals(getPiecePositions().get("topLeft"), pieceCoords)) {
 			victory1 = true;
 		} else {
 			victory1 = false;
 		}
 
 		pieceCoords = new GPoint[] { new GPoint(2, 0), new GPoint(3, 0), new GPoint(3, 1) };
-		if (Arrays.deepEquals(getPiecePositions().get("topRight"), pieceCoords)) {
+		if (Arrays.equals(getPiecePositions().get("topRight"), pieceCoords)) {
 			victory2 = true;
 		} else {
 			victory2 = false;
 		}
 
 		pieceCoords = new GPoint[] { new GPoint(0, 2), new GPoint(0, 3), new GPoint(1, 3) };
-		if (Arrays.deepEquals(getPiecePositions().get("bottomLeft"), pieceCoords)) {
+		if (Arrays.equals(getPiecePositions().get("bottomLeft"), pieceCoords)) {
 			victory3 = true;
 		} else {
 			victory3 = false;
 		}
 
 		pieceCoords = new GPoint[] { new GPoint(2, 3), new GPoint(3, 2), new GPoint(3, 3) };
-		if (Arrays.deepEquals(getPiecePositions().get("bottomRight"), pieceCoords)) {
+		if (Arrays.equals(getPiecePositions().get("bottomRight"), pieceCoords)) {
 			victory4 = true;
 		} else {
 			victory4 = false;
 		}
 
 		pieceCoords = new GPoint[] { new GPoint(1, 4), new GPoint(1, 5), new GPoint(2, 4), new GPoint(2, 5) };
-		if (Arrays.deepEquals(getPiecePositions().get("middleSquare"), pieceCoords)) {
+		if (Arrays.equals(getPiecePositions().get("middleSquare"), pieceCoords)) {
 			victory5 = true;
 		} else {
 			victory5 = false;
