@@ -3,18 +3,48 @@ package programming.project;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+//import java.io.IOException;
 import java.util.Map;
 import acm.graphics.GCompound;
 import acm.graphics.GLabel;
 import acm.graphics.GPoint;
 import acm.graphics.GRect;
 import acm.program.GraphicsProgram;
+//import de.cau.infprogoo.lighthouse.LighthouseDisplay;
 
 /**
  * This class controls the sliding puzzle. Its internal View class handles the
  * graphics.
  */
 public class PuzzleController extends GraphicsProgram {
+
+//	LighthouseDisplay display = new LighthouseDisplay("MyUsername", "MyToken");
+//
+//	public void connect() {
+//		// Try connecting to the display
+//		try {
+//			display.connect();
+//		} catch (Exception e) {
+//			System.out.println("Connection failed: " + e.getMessage());
+//			e.printStackTrace();
+//		}
+//
+//		// Send data to the display
+//		try {
+//			// This array contains for every window (14 rows, 28 columns) three
+//			// bytes that define the red, green, and blue component of the color
+//			// to be shown in that window. See documentation of LighthouseDisplay's
+//			// send(...) method.
+//			byte[] data = new byte[14 * 28 * 3];
+//
+//			// Fill array
+//
+//			display.send(data);
+//		} catch (IOException e) {
+//			System.out.println("Connection failed: " + e.getMessage());
+//			e.printStackTrace();
+//		}
+//	}
 
 	private static final int CELL_SIZE = 80;
 	private static final int GAP = 8;
