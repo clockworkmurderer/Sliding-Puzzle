@@ -1,6 +1,5 @@
 package programming.project;
 
-
 // new commit
 
 import java.awt.Color;
@@ -77,7 +76,9 @@ public class PuzzleController extends GraphicsProgram {
 
 	@Override
 	public void run() {
-		introduction();
+		// introduction();
+		playing = true;
+		gameStart();
 	}
 
 	/** Introduce the player to the game. */
@@ -204,7 +205,7 @@ public class PuzzleController extends GraphicsProgram {
 
 	@Override
 	public void keyTyped(KeyEvent e) {
-		if (playing) {
+		if (playing && !board.winCondition()) {
 			if (activePiece != null) {
 				switch (Character.toUpperCase(e.getKeyChar())) {
 				case 'W':
@@ -226,6 +227,9 @@ public class PuzzleController extends GraphicsProgram {
 					break;
 				}
 			}
+		} else if (playing && board.winCondition()) {
+			pause(3000);
+			victory();
 		}
 	}
 
@@ -247,14 +251,10 @@ public class PuzzleController extends GraphicsProgram {
 		} else {
 			moveCounter++;
 			activePiece.movePiece(x, y);
+			System.out.println("Test");
 			board.setPiecePositions(activePiece.getName(), activePiece.getCoordinates());
 			repaintBoard();
 			view.draw(activePiece, activePieceColor);
-			repaintBoard();
-			if (board.winCondition()) {
-				pause(3000);
-				victory();
-			}
 		}
 	}
 
