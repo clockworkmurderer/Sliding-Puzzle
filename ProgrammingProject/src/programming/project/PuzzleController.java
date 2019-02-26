@@ -1,52 +1,20 @@
 package programming.project;
 
-// new commit
-
 import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-//import java.io.IOException;
 import java.util.Map;
 import acm.graphics.GCompound;
 import acm.graphics.GLabel;
 import acm.graphics.GPoint;
 import acm.graphics.GRect;
 import acm.program.GraphicsProgram;
-//import de.cau.infprogoo.lighthouse.LighthouseDisplay;
 
 /**
  * This class controls the sliding puzzle. Its internal View class handles the
  * graphics.
  */
 public class PuzzleController extends GraphicsProgram {
-
-//	LighthouseDisplay display = new LighthouseDisplay("MyUsername", "MyToken");
-//
-//	public void connect() {
-//		// Try connecting to the display
-//		try {
-//			display.connect();
-//		} catch (Exception e) {
-//			System.out.println("Connection failed: " + e.getMessage());
-//			e.printStackTrace();
-//		}
-//
-//		// Send data to the display
-//		try {
-//			// This array contains for every window (14 rows, 28 columns) three
-//			// bytes that define the red, green, and blue component of the color
-//			// to be shown in that window. See documentation of LighthouseDisplay's
-//			// send(...) method.
-//			byte[] data = new byte[14 * 28 * 3];
-//
-//			// Fill array
-//
-//			display.send(data);
-//		} catch (IOException e) {
-//			System.out.println("Connection failed: " + e.getMessage());
-//			e.printStackTrace();
-//		}
-//	}
 
 	private static final int CELL_SIZE = 80;
 	private static final int GAP = 8;
@@ -133,20 +101,28 @@ public class PuzzleController extends GraphicsProgram {
 
 	/** This method repaints the board. */
 	public void repaintBoard() {
-		removeAll();
-		view.gridSetup();
-		view.draw(board.topLeft, inactivePieceColor);
-		view.draw(board.topRight, inactivePieceColor);
-		view.draw(board.bottomLeft, inactivePieceColor);
-		view.draw(board.bottomRight, inactivePieceColor);
-		view.draw(board.middleSquare, inactivePieceColor);
-
+		if (!board.winCondition()) {
+			removeAll();
+			view.gridSetup();
+			view.draw(board.topLeft, inactivePieceColor);
+			view.draw(board.topRight, inactivePieceColor);
+			view.draw(board.bottomLeft, inactivePieceColor);
+			view.draw(board.bottomRight, inactivePieceColor);
+			view.draw(board.middleSquare, inactivePieceColor);
+		} else {
+			removeAll();
+			view.gridSetup();
+			view.draw(board.topLeft, Color.GREEN);
+			view.draw(board.topRight, Color.GREEN);
+			view.draw(board.bottomLeft, Color.GREEN);
+			view.draw(board.bottomRight, Color.GREEN);
+			view.draw(board.middleSquare, Color.GREEN);
+		}
 	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
 		if (playing) {
-			activePiece = null;
 			repaintBoard();
 			lastClick = new GPoint(e.getPoint());
 
@@ -228,7 +204,6 @@ public class PuzzleController extends GraphicsProgram {
 				}
 			}
 		} else if (playing && board.winCondition()) {
-			pause(3000);
 			victory();
 		}
 	}
@@ -267,6 +242,7 @@ public class PuzzleController extends GraphicsProgram {
 
 	/** Displays the victory message upon completing the puzzle. */
 	public void victory() {
+		pause(3000);
 		removeAll();
 		setSize(300, 100);
 		GLabel victory = new GLabel("You completed the puzzle in only " + moveCounter + " moves!");
