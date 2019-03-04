@@ -32,7 +32,7 @@ public class PuzzleController extends GraphicsProgram {
 	private String name = new String();
 	private GPoint lastClick;
 	private GamePiece activePiece;
-
+	
 	private boolean playing = false;
 
 	@Override
@@ -44,7 +44,7 @@ public class PuzzleController extends GraphicsProgram {
 
 	@Override
 	public void run() {
-		// introduction();
+		introduction();
 		playing = true;
 		gameStart();
 	}
@@ -101,6 +101,7 @@ public class PuzzleController extends GraphicsProgram {
 
 	/** This method repaints the board. */
 	public void repaintBoard() {
+		
 		if (!board.winCondition()) {
 			removeAll();
 			view.gridSetup();
@@ -143,39 +144,42 @@ public class PuzzleController extends GraphicsProgram {
 					}
 				}
 			}
-
-			/**
-			 * Uses the key from the HashMap to figure out which, if any, piece was clicked
-			 * and then sets the active piece to the piece which was clicked.
-			 */
-			if (name != null) {
-				switch (name) {
-				case "topLeft":
-					activePiece = board.topLeft;
-					view.draw(activePiece, activePieceColor);
-					break;
-				case "topRight":
-					activePiece = board.topRight;
-					view.draw(activePiece, activePieceColor);
-					break;
-				case "bottomLeft":
-					activePiece = board.bottomLeft;
-					view.draw(activePiece, activePieceColor);
-					break;
-				case "bottomRight":
-					activePiece = board.bottomRight;
-					view.draw(activePiece, activePieceColor);
-					break;
-				case "middleSquare":
-					activePiece = board.middleSquare;
-					view.draw(activePiece, activePieceColor);
-					break;
-				default:
-					break;
-				}
-			}
+			nameCheck();
 		} else {
 			return;
+		}
+	}
+
+	/**
+	 * Uses the key from the HashMap to figure out which, if any, piece was clicked
+	 * and then sets the active piece to the piece which was clicked.
+	 */
+	private void nameCheck() {
+		if (name != null) {
+			switch (name) {
+			case "topLeft":
+				activePiece = board.topLeft;
+				view.draw(activePiece, activePieceColor);
+				break;
+			case "topRight":
+				activePiece = board.topRight;
+				view.draw(activePiece, activePieceColor);
+				break;
+			case "bottomLeft":
+				activePiece = board.bottomLeft;
+				view.draw(activePiece, activePieceColor);
+				break;
+			case "bottomRight":
+				activePiece = board.bottomRight;
+				view.draw(activePiece, activePieceColor);
+				break;
+			case "middleSquare":
+				activePiece = board.middleSquare;
+				view.draw(activePiece, activePieceColor);
+				break;
+			default:
+				break;
+			}
 		}
 	}
 
@@ -226,7 +230,6 @@ public class PuzzleController extends GraphicsProgram {
 		} else {
 			moveCounter++;
 			activePiece.movePiece(x, y);
-			System.out.println("Test");
 			board.setPiecePositions(activePiece.getName(), activePiece.getCoordinates());
 			repaintBoard();
 			view.draw(activePiece, activePieceColor);

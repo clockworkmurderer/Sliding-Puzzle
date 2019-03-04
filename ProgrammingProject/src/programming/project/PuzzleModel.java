@@ -41,9 +41,9 @@ public class PuzzleModel {
 		bottomRight.setOrigin(new GPoint(2, 2));
 		piecePositions.put(bottomRight.getName(), bottomRight.getCoordinates());
 
-		middleSquare = new GamePiece(new GPoint(0, 4), new GPoint(0, 5), new GPoint(1, 4), new GPoint(1, 5),
+		middleSquare = new GamePiece(new GPoint(1, 1), new GPoint(1, 2), new GPoint(2, 1), new GPoint(2, 2),
 				"middleSquare");
-		middleSquare.setOrigin(new GPoint(0, 4));
+		middleSquare.setOrigin(new GPoint(1, 1));
 		piecePositions.put(middleSquare.getName(), middleSquare.getCoordinates());
 
 	}
