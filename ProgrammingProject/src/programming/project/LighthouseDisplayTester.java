@@ -161,9 +161,7 @@ public class LighthouseDisplayTester extends GraphicsProgram {
 					red = 100;
 					green = 126;
 					blue = 100;
-					index = (int) board.topRight.getOrigin().getX() + CELL_WIDTH * 2;
-					index-=2;
-//						index += 4;
+					index = (int) board.topRight.getOrigin().getX() + CELL_WIDTH * 2 - 2;
 					drawCell(index, red, green, blue);
 					drawCell(index + CELL_WIDTH, red, green, blue);
 					drawCell(index + CELL_HEIGHT + CELL_WIDTH, red, green, blue);
@@ -173,7 +171,6 @@ public class LighthouseDisplayTester extends GraphicsProgram {
 					green = 42;
 					blue = 44;
 					index = (int) board.bottomLeft.getOrigin().getX() + CELL_HEIGHT * 2;
-//						index += CELL_HEIGHT;
 					drawCell(index, red, green, blue);
 					drawCell(index + CELL_HEIGHT, red, green, blue);
 					drawCell(index + CELL_HEIGHT + CELL_WIDTH, red, green, blue);
@@ -182,9 +179,7 @@ public class LighthouseDisplayTester extends GraphicsProgram {
 					red = 100;
 					green = 100;
 					blue = 100;
-					index = (int) board.bottomRight.getOrigin().getX() + CELL_HEIGHT * 2 + CELL_WIDTH * 2;
-					index-=2;
-//						index += 4 + CELL_HEIGHT;
+					index = (int) board.bottomRight.getOrigin().getX() + CELL_HEIGHT * 2 + CELL_WIDTH * 2 - 2;
 					drawCell(index + CELL_WIDTH, red, green, blue);
 					drawCell(index + CELL_HEIGHT, red, green, blue);
 					drawCell(index + CELL_HEIGHT + CELL_WIDTH, red, green, blue);
@@ -193,16 +188,11 @@ public class LighthouseDisplayTester extends GraphicsProgram {
 					red = 126;
 					green = 126;
 					blue = 126;
-					index = (int) board.bottomRight.getOrigin().getX() + CELL_HEIGHT + CELL_WIDTH;
-					index-=2;
-//						index += 85;
+					index = (int) board.bottomRight.getOrigin().getX() + CELL_HEIGHT + CELL_WIDTH - 2;
 					drawCell(index, red, green, blue);
 					drawCell(index + CELL_WIDTH, red, green, blue);
 					drawCell(index + CELL_HEIGHT, red, green, blue);
 					drawCell(index + CELL_HEIGHT + CELL_WIDTH, red, green, blue);
-					break;
-				default:
-					break;
 				}
 			}
 		}
@@ -211,18 +201,15 @@ public class LighthouseDisplayTester extends GraphicsProgram {
 			drawWindows(index, red, green, blue);
 			drawWindows(index + 3, red, green, blue);
 			drawWindows(index + 6, red, green, blue);
-//			drawWindows(index + 9, (byte) 0, (byte) 0, (byte) 0);
 			drawWindows(index + 84, red, green, blue);
 			drawWindows(index + 87, red, green, blue);
 			drawWindows(index + 90, red, green, blue);
-//			drawWindows(index + 93, (byte) 0, (byte) 0, (byte) 0);
 		}
 
 		private void drawWindows(int index, byte red, byte green, byte blue) {
 			data[index] = red;
 			data[index + 1] = green;
 			data[index + 2] = blue;
-//			data[index + 3] = 0;
 		}
 
 		private void sendArray(LighthouseDisplay display) {
