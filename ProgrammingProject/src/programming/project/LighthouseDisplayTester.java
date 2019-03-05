@@ -16,10 +16,9 @@ public class LighthouseDisplayTester extends GraphicsProgram {
 
 	private PuzzleModel board = new PuzzleModel();
 	private PuzzleView view = new PuzzleView();
-	private Color inactivePieceColor = new Color(0, 51, 153);
-	private Color activePieceColor = new Color(51, 153, 102);
+	private static final int CELL_WIDTH = 9;
+	private static final int CELL_HEIGHT = 168;
 
-	private String name = new String();
 	private GamePiece activePiece;
 
 	@Override
@@ -140,10 +139,113 @@ public class LighthouseDisplayTester extends GraphicsProgram {
 		}
 
 		private void fillArray() {
-			for (int i = 0; i < data.length; i++) {
+
+			for (Map.Entry<String, GPoint[]> entry : board.getPiecePositions().entrySet()) {
+				for (int thisLine = 0; thisLine < 6; thisLine++) {
+					GPoint[] temp = entry.getValue();
+					int red = 0;
+					int green = 0;
+					int blue = 0;
+					int index = 0;
+					switch (entry.getKey()) {
+					case "topLeft":
+						red = 26;
+						green = 158;
+						blue = 200;
+						index = 0;
+						for (int i = 0; i < temp.length; i++) {
+							if ((int) temp[i].getY() == thisLine) {
+								index = (int) board.topLeft.getOrigin().getX();
+								drawCell(index + (i * CELL_WIDTH), red, green, blue);
+							} else if (temp[i].getY() == thisLine + 1) {
+								index = (int) board.topLeft.getOrigin().getX();
+								drawCell(index + CELL_HEIGHT, red, green, blue);
+							}
+						}
+						break;
+					case "topRight":
+//						red = 144;
+//						green = 179;
+//						blue = 100;
+//						index = 0;
+//						for (int i = 0; i < temp.length; i++) {
+//							if ((int) temp[i].getY() == thisLine) {
+//								index = (int) board.topRight.getOrigin().getX() * CELL_WIDTH * 2;
+//								drawCell(index, red, green, blue);
+//								drawCell(index + CELL_WIDTH, red, green, blue);
+//							} else if (temp[i].getY() == thisLine + 1) {
+//								drawCell(index + CELL_HEIGHT + CELL_WIDTH, red, green, blue);
+//							}
+//						}
+						break;
+					case "bottomLeft":
+//						red = 26;
+//						green = 158;
+//						blue = 200;
+//						index = 0;
+//						for (int i = 0; i < temp.length; i++) {
+//							if ((int) temp[i].getY() == thisLine) {
+//								index = (int) temp[i].getX();
+//								drawCell(index, red, green, blue);
+//								drawCell(index + CELL_WIDTH, red, green, blue);
+//							} else {
+//								drawCell(index + CELL_HEIGHT, red, green, blue);
+//							}
+//						}
+						break;
+					case "bottomRight":
+//						red = 26;
+//						green = 158;
+//						blue = 200;
+//						index = 0;
+//						for (int i = 0; i < temp.length; i++) {
+//							if ((int) temp[i].getY() == thisLine) {
+//								index = (int) temp[i].getX();
+//								drawCell(index, red, green, blue);
+//								drawCell(index + CELL_WIDTH, red, green, blue);
+//							} else {
+//								drawCell(index + CELL_HEIGHT, red, green, blue);
+//							}
+//						}
+						break;
+					case "middleSquare":
+//						red = 255;
+//						green = 255;
+//						blue = 255;
+//						index = 0;
+//						for (int i = 0; i < temp.length; i++) {
+//							if ((int) temp[i].getY() == thisLine) {
+//								index = (int) temp[i].getX();
+//								drawCell(index, red, green, blue);
+//								drawCell(index + CELL_WIDTH, red, green, blue);
+//							} else {
+//								drawCell(index + CELL_HEIGHT, red, green, blue);
+//							}
+//						}
+						break;
+					default:
+						break;
+					}
+				}
 			}
 		}
-		
+
+		private void drawCell(int index, int red, int green, int blue) {
+			drawWindows(index, red, green, blue);
+			drawWindows(index + 3, red, green, blue);
+			drawWindows(index + 6, red, green, blue);
+			drawWindows(index + 84, red, green, blue);
+			drawWindows(index + 87, red, green, blue);
+			drawWindows(index + 90, red, green, blue);
+		}
+
+		private void drawWindows(int index, int red, int green, int blue) {
+			data[index] = (byte) red;
+			data[index + 1] = (byte) green;
+			data[index + 2] = (byte) blue;
+//			data[index + 3] = (byte) 0;
+		}
+
 		private void sendArray(LighthouseDisplay display) {
 			try {
 				while (true) {
