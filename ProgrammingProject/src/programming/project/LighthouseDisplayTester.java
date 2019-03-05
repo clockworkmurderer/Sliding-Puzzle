@@ -30,6 +30,7 @@ public class LighthouseDisplayTester extends GraphicsProgram {
 
 	@Override
 	public void run() {
+		view.draw();
 	}
 
 	@Override
@@ -125,7 +126,7 @@ public class LighthouseDisplayTester extends GraphicsProgram {
 	 */
 	class PuzzleView {
 
-		LighthouseDisplay display = new LighthouseDisplay("stu213278", "API-TOK_QUqH-fE+a-+oJN-UItd-pt/Q");
+		LighthouseDisplay display = new LighthouseDisplay("stu213278", "API-TOK_CXzd-U3Qd-pTSH-agBO-yoTj");
 		private byte[] data = new byte[14 * 28 * 3];
 
 		/**
@@ -138,6 +139,11 @@ public class LighthouseDisplayTester extends GraphicsProgram {
 			sendArray(display);
 		}
 
+		private void fillArray() {
+			for (int i = 0; i < data.length; i++) {
+			}
+		}
+		
 		private void sendArray(LighthouseDisplay display) {
 			try {
 				while (true) {
@@ -153,9 +159,6 @@ public class LighthouseDisplayTester extends GraphicsProgram {
 				System.out.println("Connection failed: " + wellAtLeastYouTried.getMessage());
 				wellAtLeastYouTried.printStackTrace();
 			}
-		}
-
-		private void fillArray() {
 		}
 
 		private void connect(LighthouseDisplay display) {
