@@ -52,12 +52,28 @@ public class LighthouseDisplayTester extends GraphicsProgram {
 				case 'D':
 					movement(1, 0);
 					break;
-				case 'R':
-					nextPiece();
-					System.out.println(activePiece.getName());
-					break;
 				case 'N':
 					reset();
+					break;
+				case '1':
+					activePiece = board.topLeft;
+					System.out.println(activePiece.getName());
+					break;
+				case '2':
+					activePiece = board.topRight;
+					System.out.println(activePiece.getName());
+					break;
+				case '3':
+					activePiece = board.bottomLeft;
+					System.out.println(activePiece.getName());
+					break;
+				case '4':
+					activePiece = board.bottomRight;
+					System.out.println(activePiece.getName());
+					break;
+				case '5':
+					activePiece = board.middleSquare;
+					System.out.println(activePiece.getName());
 					break;
 				default:
 					break;
@@ -188,7 +204,7 @@ public class LighthouseDisplayTester extends GraphicsProgram {
 				// do {
 				display.send(data);
 				try {
-					Thread.sleep(1000);
+					Thread.sleep(100);
 				} catch (Exception couldNotSleep) {
 					couldNotSleep.printStackTrace();
 					System.exit(-1);
