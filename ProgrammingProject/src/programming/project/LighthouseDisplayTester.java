@@ -133,104 +133,93 @@ public class LighthouseDisplayTester extends GraphicsProgram {
 		 * color.
 		 */
 		public void draw() {
+			for (int i = 0; i < data.length; i++) {
+				data[i] = (byte) 0;
+			}
 			connect(display);
 			fillArray();
 			sendArray(display);
 		}
 
 		private void fillArray() {
-
 			for (Map.Entry<String, GPoint[]> entry : board.getPiecePositions().entrySet()) {
-				for (int thisLine = 0; thisLine < 6; thisLine++) {
-					GPoint[] temp = entry.getValue();
-					int red = 0;
-					int green = 0;
-					int blue = 0;
-					int index = 0;
-					switch (entry.getKey()) {
-					case "topLeft":
-						red = 26;
-						green = 158;
-						blue = 200;
-						index = 0;
-						for (int i = 0; i < temp.length; i++) {
-							if ((int) temp[i].getY() == thisLine) {
-								index = (int) board.topLeft.getOrigin().getX();
-								drawCell(index + (i * CELL_WIDTH), red, green, blue);
-							} else if (temp[i].getY() == thisLine + 1) {
-								index = (int) board.topLeft.getOrigin().getX();
-								drawCell(index + CELL_HEIGHT, red, green, blue);
-							}
-						}
-						break;
-					case "topRight":
-//						red = 144;
-//						green = 179;
-//						blue = 100;
-//						index = 0;
-//						for (int i = 0; i < temp.length; i++) {
-//							if ((int) temp[i].getY() == thisLine) {
-//								index = (int) board.topRight.getOrigin().getX() * CELL_WIDTH * 2;
-//								drawCell(index, red, green, blue);
-//								drawCell(index + CELL_WIDTH, red, green, blue);
-//							} else if (temp[i].getY() == thisLine + 1) {
-//								drawCell(index + CELL_HEIGHT + CELL_WIDTH, red, green, blue);
-//							}
-//						}
-						break;
-					case "bottomLeft":
-//						red = 26;
-//						green = 158;
-//						blue = 200;
-//						index = 0;
-//						for (int i = 0; i < temp.length; i++) {
-//							if ((int) temp[i].getY() == thisLine) {
-//								index = (int) temp[i].getX();
-//								drawCell(index, red, green, blue);
-//								drawCell(index + CELL_WIDTH, red, green, blue);
-//							} else {
-//								drawCell(index + CELL_HEIGHT, red, green, blue);
-//							}
-//						}
-						break;
-					case "bottomRight":
-//						red = 26;
-//						green = 158;
-//						blue = 200;
-//						index = 0;
-//						for (int i = 0; i < temp.length; i++) {
-//							if ((int) temp[i].getY() == thisLine) {
-//								index = (int) temp[i].getX();
-//								drawCell(index, red, green, blue);
-//								drawCell(index + CELL_WIDTH, red, green, blue);
-//							} else {
-//								drawCell(index + CELL_HEIGHT, red, green, blue);
-//							}
-//						}
-						break;
-					case "middleSquare":
-//						red = 255;
-//						green = 255;
-//						blue = 255;
-//						index = 0;
-//						for (int i = 0; i < temp.length; i++) {
-//							if ((int) temp[i].getY() == thisLine) {
-//								index = (int) temp[i].getX();
-//								drawCell(index, red, green, blue);
-//								drawCell(index + CELL_WIDTH, red, green, blue);
-//							} else {
-//								drawCell(index + CELL_HEIGHT, red, green, blue);
-//							}
-//						}
-						break;
-					default:
-						break;
+				GPoint[] temp = entry.getValue();
+				byte red = 0;
+				byte green = 0;
+				byte blue = 0;
+				int index = 0;
+				switch (entry.getKey()) {
+				case "topLeft":
+					red = 26;
+					green = 126;
+					blue = 75;
+					index = (int) board.topLeft.getOrigin().getX();
+					for (int i = 0; i < temp.length; i++) {
+						drawCell(index, red, green, blue);
+						drawCell(index + CELL_WIDTH, red, green, blue);
+						drawCell(index + CELL_HEIGHT, red, green, blue);
 					}
+					break;
+				case "topRight":
+					red = 100;
+					green = 126;
+					blue = 100;
+					index = 0;
+					for (int i = 0; i < temp.length; i++) {
+						index = new Integer( (int)board.topRight.getOrigin().getX() + CELL_WIDTH * 2);
+//						index += 4;
+						drawCell(index, red, green, blue);
+						drawCell(index + CELL_WIDTH, red, green, blue);
+						drawCell(index + CELL_HEIGHT + CELL_WIDTH, red, green, blue);
+					}
+					break;
+				case "bottomLeft":
+					red = 126;
+					green = 42;
+					blue = 44;
+					index = 0;
+					for (int i = 0; i < temp.length; i++) {
+						index = new Integer(  (int) board.bottomLeft.getOrigin().getX() + CELL_HEIGHT * 2);
+//						index += CELL_HEIGHT;
+						drawCell(index, red, green, blue);
+						drawCell(index + CELL_HEIGHT, red, green, blue);
+						drawCell(index + CELL_HEIGHT + CELL_WIDTH, red, green, blue);
+					}
+					break;
+				case "bottomRight":
+					red = 100;
+					green = 100;
+					blue = 100;
+					index = 0;
+					for (int i = 0; i < temp.length; i++) {
+						index = new Integer(  (int) board.bottomRight.getOrigin().getX() + CELL_HEIGHT * 2 + CELL_WIDTH * 2);
+//						index += 4 + CELL_HEIGHT;
+						drawCell(index + CELL_WIDTH, red, green, blue);
+						drawCell(index + CELL_HEIGHT, red, green, blue);
+						drawCell(index + CELL_HEIGHT + CELL_WIDTH, red, green, blue);
+					}
+					break;
+				case "middleSquare":
+					red = 126;
+					green = 126;
+					blue = 126;
+					index = 0;
+					for (int i = 0; i < temp.length; i++) {
+						index = new Integer(  (int) board.bottomRight.getOrigin().getX() + CELL_HEIGHT + CELL_WIDTH);
+//						index += 85;
+						drawCell(index, red, green, blue);
+						drawCell(index + CELL_WIDTH, red, green, blue);
+						drawCell(index + CELL_HEIGHT, red, green, blue);
+						drawCell(index + CELL_HEIGHT + CELL_WIDTH, red, green, blue);
+					}
+					break;
+				default:
+					break;
 				}
 			}
 		}
 
-		private void drawCell(int index, int red, int green, int blue) {
+		private void drawCell(int index, byte red, byte green, byte blue) {
 			drawWindows(index, red, green, blue);
 			drawWindows(index + 3, red, green, blue);
 			drawWindows(index + 6, red, green, blue);
@@ -239,11 +228,11 @@ public class LighthouseDisplayTester extends GraphicsProgram {
 			drawWindows(index + 90, red, green, blue);
 		}
 
-		private void drawWindows(int index, int red, int green, int blue) {
-			data[index] = (byte) red;
-			data[index + 1] = (byte) green;
-			data[index + 2] = (byte) blue;
-//			data[index + 3] = (byte) 0;
+		private void drawWindows(int index, byte red, byte green, byte blue) {
+			data[index] = red;
+			data[index + 1] = green;
+			data[index + 2] = blue;
+			//data[index + 3] = 0;
 		}
 
 		private void sendArray(LighthouseDisplay display) {
