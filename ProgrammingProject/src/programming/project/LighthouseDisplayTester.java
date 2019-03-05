@@ -2,7 +2,6 @@ package programming.project;
 
 import java.io.IOException;
 import de.cau.infprogoo.lighthouse.LighthouseDisplay;
-import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.util.Map;
 import acm.graphics.GPoint;
@@ -21,6 +20,8 @@ public class LighthouseDisplayTester extends GraphicsProgram {
 
 	private GamePiece activePiece;
 
+	boolean moving;
+
 	@Override
 	public void init() {
 		super.init();
@@ -35,7 +36,9 @@ public class LighthouseDisplayTester extends GraphicsProgram {
 	@Override
 	public void keyTyped(KeyEvent e) {
 		if (!board.winCondition()) {
-			if (activePiece != null) {
+			if (activePiece == null) {
+				activePiece = board.topLeft;
+			} else {
 				switch (Character.toUpperCase(e.getKeyChar())) {
 				case 'W':
 					movement(0, -1);
@@ -49,16 +52,9 @@ public class LighthouseDisplayTester extends GraphicsProgram {
 				case 'D':
 					movement(1, 0);
 					break;
-				case 'N':
-					reset();
-					break;
-				default:
-					break;
-				}
-			} else {
-				switch (Character.toUpperCase(e.getKeyChar())) {
 				case 'R':
 					nextPiece();
+					System.out.println(activePiece.getName());
 					break;
 				case 'N':
 					reset();
@@ -74,7 +70,9 @@ public class LighthouseDisplayTester extends GraphicsProgram {
 
 	/** This method sets the active piece to the next piece on the board. */
 	private void nextPiece() {
-		if (activePiece == board.topLeft)
+		if (activePiece == null)
+			activePiece = board.topLeft;
+		else if (activePiece == board.topLeft)
 			activePiece = board.topRight;
 		else if (activePiece == board.topRight)
 			activePiece = board.bottomLeft;
@@ -92,6 +90,7 @@ public class LighthouseDisplayTester extends GraphicsProgram {
 	 * being made is valid.
 	 */
 	private void movement(int x, int y) {
+		moving = true;
 		GPoint[] destination = new GPoint[activePiece.getCoordinates().length];
 		for (int i = 0; i < destination.length; i++) {
 			destination[i] = new GPoint(activePiece.getCoordinates()[i].getX() + x,
@@ -107,6 +106,7 @@ public class LighthouseDisplayTester extends GraphicsProgram {
 			board.setPiecePositions(activePiece.getName(), activePiece.getCoordinates());
 			view.draw();
 		}
+		moving = false;
 	}
 
 	/** Resets the puzzle. */
@@ -115,7 +115,6 @@ public class LighthouseDisplayTester extends GraphicsProgram {
 	}
 
 	public void victory() {
-		pause(3000);
 	}
 
 	/**
@@ -143,61 +142,33 @@ public class LighthouseDisplayTester extends GraphicsProgram {
 
 		private void fillArray() {
 			for (Map.Entry<String, GPoint[]> entry : board.getPiecePositions().entrySet()) {
-				byte red = 0;
-				byte green = 0;
-				byte blue = 0;
-				int index = 0;
 				switch (entry.getKey()) {
 				case "topLeft":
-					red = 26;
-					green = 127;
-					blue = 75;
-					index = (int) board.topLeft.getOrigin().getX();
-					drawCell(index, red, green, blue);
-					drawCell(index + CELL_WIDTH, red, green, blue);
-					drawCell(index + CELL_HEIGHT, red, green, blue);
+					drawPiece(board.topLeft, 15, 200, 150);
 					break;
 				case "topRight":
-					red = 100;
-					green = 126;
-					blue = 100;
-					index = (int) board.topRight.getOrigin().getX() + CELL_WIDTH * 2 - 2;
-					drawCell(index, red, green, blue);
-					drawCell(index + CELL_WIDTH, red, green, blue);
-					drawCell(index + CELL_HEIGHT + CELL_WIDTH, red, green, blue);
+					drawPiece(board.topRight, 5, 255, 5);
 					break;
 				case "bottomLeft":
-					red = 126;
-					green = 42;
-					blue = 44;
-					index = (int) board.bottomLeft.getOrigin().getX() + CELL_HEIGHT * 2;
-					drawCell(index, red, green, blue);
-					drawCell(index + CELL_HEIGHT, red, green, blue);
-					drawCell(index + CELL_HEIGHT + CELL_WIDTH, red, green, blue);
+					drawPiece(board.bottomLeft, 255, 10, 10);
 					break;
 				case "bottomRight":
-					red = 100;
-					green = 100;
-					blue = 100;
-					index = (int) board.bottomRight.getOrigin().getX() + CELL_HEIGHT * 2 + CELL_WIDTH * 2 - 2;
-					drawCell(index + CELL_WIDTH, red, green, blue);
-					drawCell(index + CELL_HEIGHT, red, green, blue);
-					drawCell(index + CELL_HEIGHT + CELL_WIDTH, red, green, blue);
+					drawPiece(board.bottomRight, 100, 100, 100);
 					break;
 				case "middleSquare":
-					red = 126;
-					green = 126;
-					blue = 126;
-					index = (int) board.bottomRight.getOrigin().getX() + CELL_HEIGHT + CELL_WIDTH - 2;
-					drawCell(index, red, green, blue);
-					drawCell(index + CELL_WIDTH, red, green, blue);
-					drawCell(index + CELL_HEIGHT, red, green, blue);
-					drawCell(index + CELL_HEIGHT + CELL_WIDTH, red, green, blue);
+					drawPiece(board.middleSquare, 255, 255, 255);
 				}
 			}
 		}
 
-		private void drawCell(int index, byte red, byte green, byte blue) {
+		private void drawPiece(GamePiece activePiece, int red, int green, int blue) {
+			for (int i = 0; i < activePiece.getCoordinates().length; i++) {
+				drawCell((int) (activePiece.getCoordinates()[i].getX() * CELL_WIDTH
+						+ activePiece.getCoordinates()[i].getY() * CELL_HEIGHT), red, green, blue);
+			}
+		}
+
+		private void drawCell(int index, int red, int green, int blue) {
 			drawWindows(index, red, green, blue);
 			drawWindows(index + 3, red, green, blue);
 			drawWindows(index + 6, red, green, blue);
@@ -206,23 +177,23 @@ public class LighthouseDisplayTester extends GraphicsProgram {
 			drawWindows(index + 90, red, green, blue);
 		}
 
-		private void drawWindows(int index, byte red, byte green, byte blue) {
-			data[index] = red;
-			data[index + 1] = green;
-			data[index + 2] = blue;
+		private void drawWindows(int index, int red, int green, int blue) {
+			data[index] = (byte) red;
+			data[index + 1] = (byte) green;
+			data[index + 2] = (byte) blue;
 		}
 
 		private void sendArray(LighthouseDisplay display) {
 			try {
-				while (true) {
-					display.send(data);
-					try {
-						Thread.sleep(1000);
-					} catch (Exception couldNotSleep) {
-						couldNotSleep.printStackTrace();
-						System.exit(-1);
-					}
+				// do {
+				display.send(data);
+				try {
+					Thread.sleep(1000);
+				} catch (Exception couldNotSleep) {
+					couldNotSleep.printStackTrace();
+					System.exit(-1);
 				}
+				// } while (moving);
 			} catch (IOException wellAtLeastYouTried) {
 				System.out.println("Connection failed: " + wellAtLeastYouTried.getMessage());
 				wellAtLeastYouTried.printStackTrace();

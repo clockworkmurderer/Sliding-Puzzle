@@ -11,8 +11,7 @@ import acm.graphics.GPoint;
  */
 public class PuzzleModel {
 	/**
-	 * These HashMaps contain the positions of the pieces on the game board and the
-	 * positions required to win the game.
+	 * This HashMap contains the positions of the pieces on the game board.
 	 */
 	private static Map<String, GPoint[]> piecePositions = new HashMap<String, GPoint[]>();
 
