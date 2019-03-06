@@ -3,7 +3,7 @@ package programming.project;
 import acm.graphics.GPoint;
 
 /**
- * Instances of this class represents pieces of a sliding puzzle. Each piece
+ * Instances of this class represent pieces of a sliding puzzle. Each piece
  * consists of a name and the coordinates of the cells it occupies.
  */
 public class GamePiece {
@@ -34,29 +34,18 @@ public class GamePiece {
 		this.name = name;
 	}
 
-	/**
-	 * Constructor for a GamePiece using a GPoint[] as an argument to provide the
-	 * cell coordinates.
-	 */
+	/** Constructor for a GamePiece using a GPoint[] as the cell coordinates. */
 	public GamePiece(GPoint[] coords, String name) {
 		this.coordinates = coords;
 		this.name = name;
 	}
 
-	/**
-	 * Returns the name of the piece.
-	 * 
-	 * @return The name of the piece.
-	 */
+	/** Returns the name of the piece. */
 	public String getName() {
 		return this.name;
 	}
 
-	/**
-	 * Returns the coordinates of the piece.
-	 * 
-	 * @return The coordinates of the piece.
-	 */
+	/** Returns the coordinates of the piece. */
 	public GPoint[] getCoordinates() {
 		return this.coordinates;
 	}
@@ -66,11 +55,7 @@ public class GamePiece {
 		this.coordinates = pieceCoordinates;
 	}
 
-	/**
-	 * Returns the origin of the piece.
-	 * 
-	 * @return The origin of the piece.
-	 */
+	/** Returns the origin of the piece. */
 	public GPoint getOrigin() {
 		return this.origin;
 	}

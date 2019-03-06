@@ -3,12 +3,15 @@ package programming.project;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.util.Map;
 import acm.graphics.GCompound;
 import acm.graphics.GLabel;
 import acm.graphics.GPoint;
 import acm.graphics.GRect;
 import acm.program.GraphicsProgram;
+import acm.util.RandomGenerator;
+import de.cau.infprogoo.lighthouse.LighthouseDisplay;
 
 /**
  * This class controls the sliding puzzle. Its internal View class handles the
@@ -18,22 +21,29 @@ public class PuzzleController extends GraphicsProgram {
 
 	private static final int CELL_SIZE = 80;
 	private static final int GAP = 8;
-
-	private int moveCounter = 0;
-	private GLabel numberOfMoves;
+	private static final int CELL_WIDTH = 9;
+	private static final int CELL_HEIGHT = 168;
+	private static final int OFFSET = 108;
 
 	private PuzzleModel board = new PuzzleModel();
 	private PuzzleView view = new PuzzleView();
+	private PuzzleLightHouseView lightHouseView = new PuzzleLightHouseView();
+
+	private RandomGenerator rgen = new RandomGenerator();
+
+	private GPoint lastClick;
+	private GLabel numberOfMoves;
+	private GCompound topLeft, topRight, bottomLeft, bottomRight, middleSquare;
+
+	private GamePiece activePiece;
+	private String name = new String();
+
 	private Color inactivePieceColor = new Color(0, 51, 153);
 	private Color activePieceColor = new Color(51, 153, 102);
 
-	private GCompound topLeft, topRight, bottomLeft, bottomRight, middleSquare;
+	private boolean playing;
 
-	private String name = new String();
-	private GPoint lastClick;
-	private GamePiece activePiece;
-	
-	private boolean playing = false;
+	private int moveCounter = 0;
 
 	@Override
 	public void init() {
@@ -101,7 +111,6 @@ public class PuzzleController extends GraphicsProgram {
 
 	/** This method repaints the board. */
 	public void repaintBoard() {
-		
 		if (!board.winCondition()) {
 			removeAll();
 			view.gridSetup();
@@ -119,6 +128,7 @@ public class PuzzleController extends GraphicsProgram {
 			view.draw(board.bottomRight, Color.GREEN);
 			view.draw(board.middleSquare, Color.GREEN);
 		}
+		lightHouseView.draw();
 	}
 
 	@Override
@@ -126,27 +136,24 @@ public class PuzzleController extends GraphicsProgram {
 		if (playing) {
 			repaintBoard();
 			lastClick = new GPoint(e.getPoint());
+			checkClick();
+			nameCheck();
+		} else
+			return;
+	}
 
-			/**
-			 * The next line reduces the clicked location to a fraction of the CELL_SIZE in
-			 * order to conform to the coordinate system.
-			 */
-			lastClick.setLocation((int) lastClick.getX() / CELL_SIZE, (int) lastClick.getY() / CELL_SIZE);
-
-			/**
-			 * Checks against the HashMap to see if the clicked cell is occupied by a piece.
-			 */
-			for (Map.Entry<String, GPoint[]> entry : board.getPiecePositions().entrySet()) {
-				GPoint[] temp = entry.getValue();
-				for (int i = 0; i < temp.length; i++) {
-					if (temp[i].equals(lastClick)) {
-						name = entry.getKey();
-					}
+	/**
+	 * Checks against the HashMap to see if the clicked cell is occupied by a piece.
+	 */
+	private void checkClick() {
+		lastClick.setLocation((int) lastClick.getX() / CELL_SIZE, (int) lastClick.getY() / CELL_SIZE);
+		for (Map.Entry<String, GPoint[]> entry : board.getPiecePositions().entrySet()) {
+			GPoint[] temp = entry.getValue();
+			for (int i = 0; i < temp.length; i++) {
+				if (temp[i].equals(lastClick)) {
+					name = entry.getKey();
 				}
 			}
-			nameCheck();
-		} else {
-			return;
 		}
 	}
 
@@ -208,6 +215,7 @@ public class PuzzleController extends GraphicsProgram {
 				}
 			}
 		} else if (playing && board.winCondition()) {
+			lightHouseView.victory();
 			victory();
 		}
 	}
@@ -263,18 +271,16 @@ public class PuzzleController extends GraphicsProgram {
 		 * color.
 		 */
 		public void draw(GamePiece piece, Color c) {
-
-			if (piece.equals(board.topLeft)) {
+			if (piece == board.topLeft) {
 				add(drawTopLeft(c), piece.getOrigin().getX() * CELL_SIZE, piece.getOrigin().getY() * CELL_SIZE);
-			} else if (piece.equals(board.topRight)) {
+			} else if (piece == board.topRight) {
 				add(drawTopRight(c), piece.getOrigin().getX() * CELL_SIZE, piece.getOrigin().getY() * CELL_SIZE);
-			} else if (piece.equals(board.bottomLeft)) {
+			} else if (piece == board.bottomLeft) {
 				add(drawBottomLeft(c), piece.getOrigin().getX() * CELL_SIZE, piece.getOrigin().getY() * CELL_SIZE);
-			} else if (piece.equals(board.bottomRight)) {
+			} else if (piece == board.bottomRight) {
 				add(drawBottomRight(c), piece.getOrigin().getX() * CELL_SIZE, piece.getOrigin().getY() * CELL_SIZE);
-			} else if (piece.equals(board.middleSquare)) {
+			} else if (piece == board.middleSquare) {
 				add(drawMiddleSquare(c), piece.getOrigin().getX() * CELL_SIZE, piece.getOrigin().getY() * CELL_SIZE);
-			} else {
 			}
 		}
 
@@ -385,6 +391,162 @@ public class PuzzleController extends GraphicsProgram {
 			middleSquare.add(middle);
 
 			return middleSquare;
+		}
+	}
+
+	/**
+	 * The PuzzleView is responsible for showing the user what is happening. It
+	 * accomplishes this by providing the draw method and the graphical version of
+	 * the game board and pieces. Additionally, this view can be shown on the
+	 * university skyscraper.
+	 */
+	class PuzzleLightHouseView {
+
+		LighthouseDisplay display = new LighthouseDisplay("stu213278", "API-TOK_mZqc-DQ4t-6bau-6ZmT-MxIK");
+		private byte[] data = new byte[14 * 28 * 3];
+
+		/**
+		 * This method draws the pieces and sends them to the lighthouse screen.
+		 */
+		public void draw() {
+			for (int i = 0; i < data.length; i++) {
+				data[i] = (byte) 0;
+			}
+			connect(display);
+			fillArray();
+			sendArray(display);
+		}
+
+		/** This method draws the border. */
+		private void drawBorder() {
+			for (int offset = 21; offset <= 1113; offset += 84) {
+				data[offset] = (byte) 255;
+				data[offset + 1] = (byte) 255;
+				data[offset + 2] = (byte) 255;
+			}
+			for (int offset = 60; offset <= 1152; offset += 84) {
+				data[offset] = (byte) 255;
+				data[offset + 1] = (byte) 255;
+				data[offset + 2] = (byte) 255;
+			}
+			for (int offset = 1116; offset <= 1151; offset++) {
+				data[offset] = (byte) 255;
+			}
+			for (int offset = 24; offset <= 59; offset++) {
+				data[offset] = (byte) 255;
+			}
+		}
+
+		/** This method draws the game board. */
+		private void fillArray() {
+			drawBorder();
+			for (Map.Entry<String, GPoint[]> entry : board.getPiecePositions().entrySet()) {
+				switch (entry.getKey()) {
+				case "topLeft":
+					drawPiece(board.topLeft, 15, 200, 150);
+					break;
+				case "topRight":
+					drawPiece(board.topRight, 5, 255, 5);
+					break;
+				case "bottomLeft":
+					drawPiece(board.bottomLeft, 255, 10, 10);
+					break;
+				case "bottomRight":
+					drawPiece(board.bottomRight, 200, 0, 200);
+					break;
+				case "middleSquare":
+					drawPiece(board.middleSquare, 255, 255, 0);
+				}
+			}
+		}
+
+		/**
+		 * This method takes three ints and a GamePiece as arguments and draws the piece
+		 * based on whether it is active or not.
+		 */
+		private void drawPiece(GamePiece pieceToBeDrawn, int red, int green, int blue) {
+			if (activePiece == pieceToBeDrawn) {
+				for (int i = 0; i < pieceToBeDrawn.getCoordinates().length; i++) {
+					drawCell((int) (pieceToBeDrawn.getCoordinates()[i].getX() * CELL_WIDTH
+							+ pieceToBeDrawn.getCoordinates()[i].getY() * CELL_HEIGHT), 255, 255, 255);
+				}
+			} else {
+				for (int i = 0; i < pieceToBeDrawn.getCoordinates().length; i++) {
+					drawCell((int) (pieceToBeDrawn.getCoordinates()[i].getX() * CELL_WIDTH
+							+ pieceToBeDrawn.getCoordinates()[i].getY() * CELL_HEIGHT), red, green, blue);
+				}
+			}
+		}
+
+		/** This method draws the windows of a single cell on the game board. */
+		private void drawCell(int index, int red, int green, int blue) {
+			index += OFFSET;
+			drawWindows(index, red, green, blue);
+			drawWindows(index + 3, red, green, blue);
+			drawWindows(index + 6, red, green, blue);
+			drawWindows(index + 84, red, green, blue);
+			drawWindows(index + 87, red, green, blue);
+			drawWindows(index + 90, red, green, blue);
+		}
+
+		/** This method draws a single window. */
+		private void drawWindows(int index, int red, int green, int blue) {
+			data[index] = (byte) red;
+			data[index + 1] = (byte) green;
+			data[index + 2] = (byte) blue;
+		}
+
+		/** This method sends the byte array to the lighthouse. */
+		private void sendArray(LighthouseDisplay display) {
+			try {
+				display.send(data);
+				try {
+					Thread.sleep(100);
+				} catch (Exception couldNotSleep) {
+					couldNotSleep.printStackTrace();
+					System.exit(-1);
+				}
+			} catch (IOException wellAtLeastYouTried) {
+				System.out.println("Connection failed: " + wellAtLeastYouTried.getMessage());
+				wellAtLeastYouTried.printStackTrace();
+			}
+		}
+
+		/** This method tries to connect to the lighthouse. */
+		private void connect(LighthouseDisplay display) {
+			try { // Try connecting to the display
+				display.connect();
+			} catch (Exception failedToConnect) {
+				System.out.println("Connection failed: " + failedToConnect.getMessage());
+				failedToConnect.printStackTrace();
+			}
+		}
+
+		/** This method makes the windows flash in a dazzling victory dance. */
+		public void victory() {
+			boolean done = false;
+			int count = 0;
+			do {
+				for (int i = 0; i < data.length; i++) {
+					data[i] = (byte) rgen.nextInt(0, 255);
+				}
+				sendArray(display);
+				try {
+					Thread.sleep(500);
+					count++;
+				} catch (Exception couldNotSleep) {
+					couldNotSleep.printStackTrace();
+					System.exit(-1);
+				}
+				if (count == 10) {
+					done = true;
+				}
+			} while (!done);
+
+			for (int i = 0; i < data.length; i++) {
+				data[i] = (byte) 0;
+			}
+			sendArray(display);
 		}
 	}
 }

@@ -10,17 +10,14 @@ import acm.graphics.GPoint;
  * pieces and the methods required to move them are included in this class.
  */
 public class PuzzleModel {
-	/**
-	 * This HashMap contains the positions of the pieces on the game board.
-	 */
+	/** The positions of the pieces on the game board. */
 	private static Map<String, GPoint[]> piecePositions = new HashMap<String, GPoint[]>();
 
 	/** The pieces. */
 	GamePiece topLeft, topRight, bottomLeft, bottomRight, middleSquare;
 
 	/**
-	 * This constructor initializes the game pieces, sets their locations to the
-	 * start position, and initializes the HashMaps.
+	 * Constructs the game pieces and sets their locations to the start position.
 	 */
 	public PuzzleModel() {
 
@@ -49,58 +46,46 @@ public class PuzzleModel {
 
 	/** This method checks the win condition of the puzzle. */
 	public boolean winCondition() {
-
 		boolean victory1, victory2, victory3, victory4, victory5;
 		GPoint[] pieceCoords;
 
 		pieceCoords = new GPoint[] { new GPoint(0, 0), new GPoint(0, 1), new GPoint(1, 0) };
-		if (Arrays.equals(getPiecePositions().get("topLeft"), pieceCoords)) {
+		if (Arrays.equals(getPiecePositions().get("topLeft"), pieceCoords))
 			victory1 = true;
-		} else {
+		else
 			victory1 = false;
-		}
 
 		pieceCoords = new GPoint[] { new GPoint(2, 0), new GPoint(3, 0), new GPoint(3, 1) };
-		if (Arrays.equals(getPiecePositions().get("topRight"), pieceCoords)) {
+		if (Arrays.equals(getPiecePositions().get("topRight"), pieceCoords))
 			victory2 = true;
-		} else {
+		else
 			victory2 = false;
-		}
 
 		pieceCoords = new GPoint[] { new GPoint(0, 2), new GPoint(0, 3), new GPoint(1, 3) };
-		if (Arrays.equals(getPiecePositions().get("bottomLeft"), pieceCoords)) {
+		if (Arrays.equals(getPiecePositions().get("bottomLeft"), pieceCoords))
 			victory3 = true;
-		} else {
+		else
 			victory3 = false;
-		}
 
 		pieceCoords = new GPoint[] { new GPoint(2, 3), new GPoint(3, 2), new GPoint(3, 3) };
-		if (Arrays.equals(getPiecePositions().get("bottomRight"), pieceCoords)) {
+		if (Arrays.equals(getPiecePositions().get("bottomRight"), pieceCoords))
 			victory4 = true;
-		} else {
+		else
 			victory4 = false;
-		}
 
 		pieceCoords = new GPoint[] { new GPoint(1, 4), new GPoint(1, 5), new GPoint(2, 4), new GPoint(2, 5) };
-		if (Arrays.equals(getPiecePositions().get("middleSquare"), pieceCoords)) {
+		if (Arrays.equals(getPiecePositions().get("middleSquare"), pieceCoords))
 			victory5 = true;
-		} else {
+		else
 			victory5 = false;
-		}
 
-		if (victory1 && victory2 && victory3 && victory4 && victory5) {
+		if (victory1 && victory2 && victory3 && victory4 && victory5)
 			return true;
-		} else {
+		else
 			return false;
-		}
-
 	}
 
-	/**
-	 * Returns the positions of the pieces on the board.
-	 * 
-	 * @return The positions of the pieces on the board
-	 */
+	/** Returns the positions of the pieces on the board. */
 	public Map<String, GPoint[]> getPiecePositions() {
 		return piecePositions;
 	}
@@ -110,17 +95,11 @@ public class PuzzleModel {
 		piecePositions.put(name, newPosition);
 	}
 
-	/**
-	 * This method checks to see whether a move is valid.
-	 * 
-	 * @activePiece The active piece.
-	 */
+	/** This method checks to see whether a move is valid. */
 	public boolean isMoveValid(GamePiece activePiece) {
 		GPoint[] activePieceCoordinates = activePiece.getCoordinates();
-		// the outermost layer of this for loop traverses the entries of the HashMap
 		for (Map.Entry<String, GPoint[]> entry : this.getPiecePositions().entrySet()) {
-			GPoint[] temp = entry.getValue(); // retrieve the coordinates of the given entry
-
+			GPoint[] temp = entry.getValue();
 			/**
 			 * This part of the loop is nested in order to avoid any
 			 * ArrayOutOfBoundsExceptions. Since the middle square takes up four cells and

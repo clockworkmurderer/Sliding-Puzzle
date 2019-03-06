@@ -6,6 +6,7 @@ import java.awt.event.KeyEvent;
 import java.util.Map;
 import acm.graphics.GPoint;
 import acm.program.GraphicsProgram;
+import acm.util.RandomGenerator;
 
 /**
  * This class controls the sliding puzzle. Its internal View class handles the
@@ -13,10 +14,12 @@ import acm.program.GraphicsProgram;
  */
 public class LighthouseDisplayTester extends GraphicsProgram {
 
+	RandomGenerator rgen = new RandomGenerator();
 	private PuzzleModel board = new PuzzleModel();
 	private PuzzleView view = new PuzzleView();
 	private static final int CELL_WIDTH = 9;
 	private static final int CELL_HEIGHT = 168;
+	private static final int OFFSET = 108;
 
 	private GamePiece activePiece;
 
@@ -58,46 +61,35 @@ public class LighthouseDisplayTester extends GraphicsProgram {
 				case '1':
 					activePiece = board.topLeft;
 					System.out.println(activePiece.getName());
+					view.draw();
 					break;
 				case '2':
 					activePiece = board.topRight;
 					System.out.println(activePiece.getName());
+					view.draw();
 					break;
 				case '3':
 					activePiece = board.bottomLeft;
 					System.out.println(activePiece.getName());
+					view.draw();
 					break;
 				case '4':
 					activePiece = board.bottomRight;
 					System.out.println(activePiece.getName());
+					view.draw();
 					break;
 				case '5':
 					activePiece = board.middleSquare;
 					System.out.println(activePiece.getName());
+					view.draw();
 					break;
 				default:
 					break;
 				}
 			}
 		} else if (board.winCondition()) {
-			victory();
+			view.victory();
 		}
-	}
-
-	/** This method sets the active piece to the next piece on the board. */
-	private void nextPiece() {
-		if (activePiece == null)
-			activePiece = board.topLeft;
-		else if (activePiece == board.topLeft)
-			activePiece = board.topRight;
-		else if (activePiece == board.topRight)
-			activePiece = board.bottomLeft;
-		else if (activePiece == board.bottomLeft)
-			activePiece = board.bottomRight;
-		else if (activePiece == board.bottomRight)
-			activePiece = board.middleSquare;
-		else if (activePiece == board.middleSquare)
-			activePiece = board.topLeft;
 	}
 
 	/**
@@ -106,7 +98,6 @@ public class LighthouseDisplayTester extends GraphicsProgram {
 	 * being made is valid.
 	 */
 	private void movement(int x, int y) {
-		moving = true;
 		GPoint[] destination = new GPoint[activePiece.getCoordinates().length];
 		for (int i = 0; i < destination.length; i++) {
 			destination[i] = new GPoint(activePiece.getCoordinates()[i].getX() + x,
@@ -122,15 +113,12 @@ public class LighthouseDisplayTester extends GraphicsProgram {
 			board.setPiecePositions(activePiece.getName(), activePiece.getCoordinates());
 			view.draw();
 		}
-		moving = false;
 	}
 
 	/** Resets the puzzle. */
 	public void reset() {
 		board = new PuzzleModel();
-	}
-
-	public void victory() {
+		view.draw();
 	}
 
 	/**
@@ -140,7 +128,7 @@ public class LighthouseDisplayTester extends GraphicsProgram {
 	 */
 	class PuzzleView {
 
-		LighthouseDisplay display = new LighthouseDisplay("stu213278", "API-TOK_CXzd-U3Qd-pTSH-agBO-yoTj");
+		LighthouseDisplay display = new LighthouseDisplay("stu213278", "API-TOK_mZqc-DQ4t-6bau-6ZmT-MxIK");
 		private byte[] data = new byte[14 * 28 * 3];
 
 		/**
@@ -169,22 +157,50 @@ public class LighthouseDisplayTester extends GraphicsProgram {
 					drawPiece(board.bottomLeft, 255, 10, 10);
 					break;
 				case "bottomRight":
-					drawPiece(board.bottomRight, 100, 100, 100);
+					drawPiece(board.bottomRight, 200, 0, 200);
 					break;
 				case "middleSquare":
-					drawPiece(board.middleSquare, 255, 255, 255);
+					drawPiece(board.middleSquare, 255, 255, 0);
 				}
 			}
 		}
 
-		private void drawPiece(GamePiece activePiece, int red, int green, int blue) {
-			for (int i = 0; i < activePiece.getCoordinates().length; i++) {
-				drawCell((int) (activePiece.getCoordinates()[i].getX() * CELL_WIDTH
-						+ activePiece.getCoordinates()[i].getY() * CELL_HEIGHT), red, green, blue);
+		private void drawPiece(GamePiece pieceToBeDrawn, int red, int green, int blue) {
+			drawBorder();
+			if (activePiece == pieceToBeDrawn) {
+				for (int i = 0; i < pieceToBeDrawn.getCoordinates().length; i++) {
+					drawCell((int) (pieceToBeDrawn.getCoordinates()[i].getX() * CELL_WIDTH
+							+ pieceToBeDrawn.getCoordinates()[i].getY() * CELL_HEIGHT), 255, 255, 255);
+				}
+			} else {
+				for (int i = 0; i < pieceToBeDrawn.getCoordinates().length; i++) {
+					drawCell((int) (pieceToBeDrawn.getCoordinates()[i].getX() * CELL_WIDTH
+							+ pieceToBeDrawn.getCoordinates()[i].getY() * CELL_HEIGHT), red, green, blue);
+				}
+			}
+		}
+
+		private void drawBorder() {
+			for (int offset = 21; offset <= 1113; offset += 84) {
+				data[offset] = (byte) 255;
+				data[offset + 1] = (byte) 255;
+				data[offset + 2] = (byte) 255;
+			}
+			for (int offset = 60; offset <= 1152; offset += 84) {
+				data[offset] = (byte) 255;
+				data[offset + 1] = (byte) 255;
+				data[offset + 2] = (byte) 255;
+			}
+			for (int offset = 1116; offset <= 1151; offset++) {
+				data[offset] = (byte) 255;
+			}
+			for (int offset = 24; offset <= 59; offset++) {
+				data[offset] = (byte) 255;
 			}
 		}
 
 		private void drawCell(int index, int red, int green, int blue) {
+			index += OFFSET;
 			drawWindows(index, red, green, blue);
 			drawWindows(index + 3, red, green, blue);
 			drawWindows(index + 6, red, green, blue);
@@ -201,7 +217,6 @@ public class LighthouseDisplayTester extends GraphicsProgram {
 
 		private void sendArray(LighthouseDisplay display) {
 			try {
-				// do {
 				display.send(data);
 				try {
 					Thread.sleep(100);
@@ -209,7 +224,6 @@ public class LighthouseDisplayTester extends GraphicsProgram {
 					couldNotSleep.printStackTrace();
 					System.exit(-1);
 				}
-				// } while (moving);
 			} catch (IOException wellAtLeastYouTried) {
 				System.out.println("Connection failed: " + wellAtLeastYouTried.getMessage());
 				wellAtLeastYouTried.printStackTrace();
@@ -223,6 +237,32 @@ public class LighthouseDisplayTester extends GraphicsProgram {
 				System.out.println("Connection failed: " + failedToConnect.getMessage());
 				failedToConnect.printStackTrace();
 			}
+		}
+
+		public void victory() {
+			boolean done = false;
+			int count = 0;
+			do {
+				for (int i = 0; i < data.length; i++) {
+					data[i] = (byte) rgen.nextInt(0, 255);
+				}
+				sendArray(display);
+				try {
+					Thread.sleep(500);
+					count++;
+				} catch (Exception couldNotSleep) {
+					couldNotSleep.printStackTrace();
+					System.exit(-1);
+				}
+				if (count == 10) {
+					done = true;
+				}
+			} while (!done);
+			
+			for (int i = 0; i < data.length; i++) {
+				data[i] = (byte) 0;
+			}
+			sendArray(display);
 		}
 	}
 }

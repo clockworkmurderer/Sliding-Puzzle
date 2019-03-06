@@ -1,0 +1,25 @@
+one row is 84 bytes
+first row therefore ends at [83], second begins at [84]
+[0]
+[84]
+[168]
+[252]
+[336]
+[420]
+[504]
+[588]
+[672]
+[756]
+[840]
+[924]
+[1008]
+[1092]
+
+for(y values)
+	for(x value)
+	(currentRow)
+	{{(HashMap.getX(currentRow) -> byte[the necessary windows] = HashMap.getY * 3) - 1}}
+	
+		middleSquare = new GamePiece(new GPoint(1, 1), new GPoint(1, 2), new GPoint(2, 1), new GPoint(2, 2),
+				"middleSquare");
+		middleSquare.setOrigin(new GPoint(1, 1));
